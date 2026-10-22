@@ -8,6 +8,7 @@ import torch
 
 from i18n.i18n import I18nAuto
 from tools.file_io import read_text
+from tools.paths import weight_path
 
 i18n = I18nAuto()
 
@@ -63,7 +64,7 @@ def savee(ckpt, sr, if_f0, name, epoch, version, hps):
         speaker_info = normalize_speaker_info(getattr(hps, "speaker_info", []))
         if speaker_info:
             opt["speaker_info"] = speaker_info
-        torch.save(opt, "assets/weights/%s.pth" % name)
+        torch.save(opt, weight_path("%s.pth" % name))
         return i18n("成功")
     except:
         return traceback.format_exc()
@@ -213,7 +214,7 @@ def extract_small_model(path, name, sr, if_f0, info, version):
         opt["f0"] = int(if_f0)
         if speaker_info:
             opt["speaker_info"] = speaker_info
-        torch.save(opt, "assets/weights/%s.pth" % name)
+        torch.save(opt, weight_path("%s.pth" % name))
         return i18n("成功")
     except:
         return traceback.format_exc()
@@ -225,7 +226,7 @@ def change_info(path, info, name):
         ckpt["info"] = info
         if name == "":
             name = os.path.basename(path)
-        torch.save(ckpt, "assets/weights/%s" % name)
+        torch.save(ckpt, weight_path(name))
         return i18n("成功")
     except:
         return traceback.format_exc()
@@ -287,7 +288,7 @@ def merge(path1, path2, alpha1, sr, f0, info, name, version):
         opt["info"] = info
         if speaker_info1 and speaker_info1 == speaker_info2:
             opt["speaker_info"] = speaker_info1
-        torch.save(opt, "assets/weights/%s.pth" % name)
+        torch.save(opt, weight_path("%s.pth" % name))
         return i18n("成功")
     except:
         return traceback.format_exc()
