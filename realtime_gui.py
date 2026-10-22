@@ -9,7 +9,11 @@ os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
 
 os.environ["OMP_NUM_THREADS"] = "4"
 
-realtime_config_path = os.path.join(now_dir, "configs", "config.json")
+realtime_config_path = (
+    os.path.join(os.environ["RVC_DATA_DIR"], "settings", "realtime.json")
+    if "RVC_DATA_DIR" in os.environ
+    else os.path.join(now_dir, "configs", "config.json")
+)
 
 flag_vc = False
 

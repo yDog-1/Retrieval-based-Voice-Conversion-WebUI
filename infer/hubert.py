@@ -1,4 +1,5 @@
 import logging
+import os
 from functools import lru_cache
 from pathlib import Path
 
@@ -11,7 +12,7 @@ from tools.cuda_graph import run_cuda_graph
 
 logger = logging.getLogger(__name__)
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = Path(os.environ.get("RVC_DATA_DIR", Path(__file__).resolve().parent.parent))
 
 
 class HubertModelWithFinalProj(HubertModel):

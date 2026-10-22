@@ -33,7 +33,7 @@ MODEL_SAMPLE_RATE = 44100
 DML_CHUNK_SIZE = 88200
 DML_OVERLAP_SIZE = 22050
 DML_MODEL_DTYPE_ENV = "PYMSS_DML_MODEL_DTYPE"
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(os.environ.get("RVC_DATA_DIR", Path(__file__).resolve().parents[1]))
 FFMPEG_PATH = PROJECT_ROOT / "ffmpeg.exe"
 AUDIO_PARAMS = {
     "wav_bit_depth": "FLOAT",
