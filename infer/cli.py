@@ -13,13 +13,29 @@ warnings.filterwarnings(
 )
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-os.chdir(PROJECT_ROOT)
-os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
-os.environ.setdefault("weight_root", str(PROJECT_ROOT / "assets" / "weights"))
-os.environ.setdefault("index_root", str(PROJECT_ROOT / "logs"))
-os.environ.setdefault("outside_index_root", str(PROJECT_ROOT / "assets" / "indices"))
-os.environ.setdefault("rmvpe_root", str(PROJECT_ROOT / "assets" / "rmvpe"))
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from tools.paths import SOURCE_ROOT, runtime_path, runtime_root
+
+
+PROJECT_ROOT = SOURCE_ROOT
+
+
+def setup_runtime():
+    root = runtime_root(PROJECT_ROOT)
+    if "RVC_DATA_DIR" in os.environ:
+        os.environ["RVC_DATA_DIR"] = str(root)
+    os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+    for key, default in (
+        ("weight_root", "assets/weights"),
+        ("index_root", "logs"),
+        ("outside_index_root", "assets/indices"),
+        ("rmvpe_root", "assets/rmvpe"),
+    ):
+        os.environ[key] = str(runtime_path(os.environ.get(key, default), root))
+    os.chdir(root)
+
 
 AUDIO_EXTENSIONS = {
     ".wav",
@@ -77,11 +93,11 @@ def build_parser():
 
 
 def resolve_model(value):
-    candidate = Path(value).expanduser()
-    if not candidate.is_absolute():
-        candidate = (PROJECT_ROOT / candidate).resolve()
+    root = runtime_root(PROJECT_ROOT)
+    candidate = runtime_path(value, root)
     if not candidate.is_file():
-        candidate = (Path(os.environ["weight_root"]) / value).resolve()
+        weights = runtime_path(os.environ.get("weight_root", "assets/weights"), root)
+        candidate = runtime_path(value, weights)
     if not candidate.is_file():
         raise FileNotFoundError("Model not found: %s" % value)
     if candidate.suffix.lower() != ".pth":
@@ -141,9 +157,7 @@ def resolve_index(value, model_name, speaker_id, index_rate):
     if index_rate == 0:
         return ""
     if value:
-        candidate = Path(value).expanduser()
-        if not candidate.is_absolute():
-            candidate = (PROJECT_ROOT / candidate).resolve()
+        candidate = runtime_path(value, runtime_root(PROJECT_ROOT))
         if "trained" in candidate.name:
             candidate = candidate.with_name(candidate.name.replace("trained", "added"))
         index_path = str(candidate)
@@ -158,8 +172,9 @@ def resolve_index(value, model_name, speaker_id, index_rate):
 
 
 def collect_jobs(input_value, output_value, output_format, recursive):
-    input_path = Path(input_value).expanduser().resolve()
-    output_path = Path(output_value).expanduser().resolve()
+    root = runtime_root(PROJECT_ROOT)
+    input_path = runtime_path(input_value, root)
+    output_path = runtime_path(output_value, root)
     if not input_path.exists():
         raise FileNotFoundError("Input not found: %s" % input_path)
 
@@ -230,6 +245,7 @@ def main(argv=None):
     if args.resample_sr and args.resample_sr < 16000:
         parser.error("--resample-sr must be 0 or at least 16000")
 
+    setup_runtime()
     model_path = resolve_model(args.model)
     os.environ["weight_root"] = str(model_path.parent)
     model_name = model_path.name

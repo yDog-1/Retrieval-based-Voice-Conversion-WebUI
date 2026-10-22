@@ -35,36 +35,41 @@ stdenvNoCC.mkDerivation {
   version = "0.1.0";
   src = lib.fileset.toSource {
     root = ../.;
-    fileset = lib.fileset.union (lib.fileset.intersection
-      (lib.fileset.fileFilter (
-        file:
-        file.name == "LICENSE"
-        || builtins.any file.hasExt [
-          "py"
-          "json"
-          "yaml"
-          "html"
-          "css"
-          "js"
-        ]
-      ) ../.)
-      (
-        lib.fileset.unions [
-          ../webui.py
-          ../realtime_gui.py
-          ../configs
-          ../i18n
-          ../infer
-          ../tools
-          ../train
-          ../assets/pymss_weights
-          ../LICENSE
-          ./launcher.py
-          ./download_models.py
-          ./doctor.py
-        ]
+    # Keep the complete release bundle, including fonts and upstream notices.
+    fileset = lib.fileset.unions [
+      ../tools/pymss/server/webui_static
+      (lib.fileset.fileFilter (file: file.hasExt "md") ../docs)
+      (lib.fileset.intersection
+        (lib.fileset.fileFilter (
+          file:
+          file.name == "LICENSE"
+          || builtins.any file.hasExt [
+            "py"
+            "json"
+            "yaml"
+            "html"
+            "css"
+            "js"
+          ]
+        ) ../.)
+        (
+          lib.fileset.unions [
+            ../webui.py
+            ../realtime_gui.py
+            ../configs
+            ../i18n
+            ../infer
+            ../tools
+            ../train
+            ../assets/pymss_weights
+            ../LICENSE
+            ./launcher.py
+            ./download_models.py
+            ./doctor.py
+          ]
+        )
       )
-    ) (lib.fileset.fileFilter (file: file.hasExt "md") ../docs);
+    ];
   };
   nativeBuildInputs = [ makeWrapper ];
   dontBuild = true;

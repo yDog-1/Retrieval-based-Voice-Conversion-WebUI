@@ -85,14 +85,31 @@
           echo 'RVC: rvc-webui / rvc-realtime / rvc-download-models / rvc-doctor'
         '';
       };
-      checks.${system}.runtime = pkgs.runCommand "rvc-runtime-check" { } ''
-        export HOME=$TMPDIR/home
-        export XDG_DATA_HOME=""
-        mkdir -p "$HOME"
-        ${app}/bin/rvc-doctor --no-cuda
-        test -d "$HOME/.local/share/rvc/assets"
-        touch $out
-      '';
+      checks.${system} = {
+        # No ML environment or native libraries: import-selection/provenance regressions.
+        packaged-checks = pkgs.runCommand "rvc-packaged-checks" { } ''
+          export PYTHONDONTWRITEBYTECODE=1
+          cd ${./.}
+          ${python}/bin/python -I -m unittest discover -s tests -p test_packaged_checks.py -v
+          touch $out
+        '';
+        runtime = pkgs.runCommand "rvc-runtime-check" { } ''
+          export HOME=$TMPDIR/home
+          export XDG_DATA_HOME=""
+          mkdir -p "$HOME"
+          ${app}/bin/rvc-doctor --no-cuda
+          test -d "$HOME/.local/share/rvc/assets"
+          # Discover future category regressions too. These may import torch or
+          # assets HTTP dependencies, so run them with the full runtime environment.
+          export PYTHONDONTWRITEBYTECODE=1
+          export PYTHONPATH=${python.pkgs.tkinter}/${python.sitePackages}
+          export PYMSS_PACKAGED_SOURCE=${app.src}
+          export LD_LIBRARY_PATH="${app.runtimeLibraries}:${lib.makeLibraryPath [ pkgs.libsndfile ]}"
+          cd ${./.}
+          ${environment}/bin/python -m unittest discover -s tests -p 'test_*.py' -v
+          touch $out
+        '';
+      };
       formatter.${system} = pkgs.nixfmt;
     };
 }
