@@ -71,6 +71,7 @@
           environment
           pkgs.uv
           pkgs.nixfmt
+          pkgs.ffmpeg
         ];
         UV_PYTHON = python.interpreter;
         UV_PYTHON_DOWNLOADS = "never";
@@ -86,8 +87,10 @@
       };
       checks.${system}.runtime = pkgs.runCommand "rvc-runtime-check" { } ''
         export HOME=$TMPDIR/home
+        export XDG_DATA_HOME=""
         mkdir -p "$HOME"
         ${app}/bin/rvc-doctor --no-cuda
+        test -d "$HOME/.local/share/rvc/assets"
         touch $out
       '';
       formatter.${system} = pkgs.nixfmt;

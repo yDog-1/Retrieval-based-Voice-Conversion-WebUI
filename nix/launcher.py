@@ -10,7 +10,7 @@ def main():
     source = Path(__file__).resolve().parents[1]
     data = Path(os.environ.get(
         "RVC_DATA_DIR",
-        str(Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local/share")) / "rvc"),
+        str(Path(os.environ.get("XDG_DATA_HOME") or Path.home() / ".local/share") / "rvc"),
     )).expanduser().resolve()
     data.mkdir(parents=True, exist_ok=True)
     os.environ["RVC_DATA_DIR"] = str(data)
