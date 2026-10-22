@@ -35,7 +35,8 @@ stdenvNoCC.mkDerivation {
   version = "0.1.0";
   src = lib.fileset.toSource {
     root = ../.;
-    fileset =
+    # Keep the complete release bundle, including fonts and upstream notices.
+    fileset = lib.fileset.union ../tools/pymss/server/webui_static (
       lib.fileset.intersection
         (lib.fileset.fileFilter (
           file:
@@ -64,7 +65,8 @@ stdenvNoCC.mkDerivation {
             ./download_models.py
             ./doctor.py
           ]
-        );
+        )
+    );
   };
   nativeBuildInputs = [ makeWrapper ];
   dontBuild = true;

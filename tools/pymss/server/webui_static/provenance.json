@@ -1,0 +1,20 @@
+{
+  "package": "pymss",
+  "version": "2.0.14",
+  "wheel_url": "https://files.pythonhosted.org/packages/3f/cb/d608e6acc4c03b2e89cb2a128af36d7c719c568ba7b92ba88bb218f4583e/pymss-2.0.14-py3-none-any.whl",
+  "wheel_sha256": "363a9f7221108c75534c6a7d17a46fd31f831425421559fc2e09f463f9033e83",
+  "subtree": "pymss/server/webui_static/",
+  "files": {
+    "assets/index-C2f3RgYK.js": "4dbb9e8e26b4435f7eab4593f4c984bd0f86c5888aa86eddd8afdf26541c5a6e",
+    "assets/index-Dd_kG96D.css": "809b6d4de36d35fd28bd6bef3b6b6af5c12816d737955f79eb7e500473b0803f",
+    "assets/noto-sans-cyrillic-ext-wght-normal-DSNfmdVt.woff2": "82ff72b28e6610f2c62de49d0f295c160a157b2718fa814bb6c512ebfdebb31d",
+    "assets/noto-sans-cyrillic-wght-normal-B2hlT84T.woff2": "6ab64433de6077ca5ad31b05420450ce986a616a4ea47b6ad16f3217055dafc3",
+    "assets/noto-sans-devanagari-wght-normal-Cv-Vwajv.woff2": "ea6a530b75d93de7dde68b1271c5b67a1af45031810db7cd4883f6620b7b1d3d",
+    "assets/noto-sans-greek-ext-wght-normal-12T8GTDR.woff2": "790b255c10c32e0b10bdcd961abad098c9697b7ffbabc1b09aca0b17af3201fd",
+    "assets/noto-sans-greek-wght-normal-Ymb6dZNd.woff2": "7f655207c2f6c140c327d6bd263bccc7a11833084f4fb0c51d9a24b7cd753651",
+    "assets/noto-sans-latin-ext-wght-normal-W1qJv59z.woff2": "6d5a79315528df191b9d86f97b0c4272a8b588fcb166773fe6588ac795de0613",
+    "assets/noto-sans-latin-wght-normal-BYSzYMf3.woff2": "51ca196f49a33e79e7870ff88ebd2829a3f627a51e7d690986618f0e7ad2b52d",
+    "assets/noto-sans-vietnamese-wght-normal-DLTJy58D.woff2": "791e3f213c155a5b1f4bbe4cbf8e33f321cfb7f46248a5ed11077dc79209a63c",
+    "index.html": "f8dcaa6d65b5d974791b9fa17202a2578debbc11cb078b2d7ef17291f261b1e6"
+  }
+}
