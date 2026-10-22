@@ -36,8 +36,10 @@ stdenvNoCC.mkDerivation {
   src = lib.fileset.toSource {
     root = ../.;
     # Keep the complete release bundle, including fonts and upstream notices.
-    fileset = lib.fileset.union ../tools/pymss/server/webui_static (
-      lib.fileset.intersection
+    fileset = lib.fileset.unions [
+      ../tools/pymss/server/webui_static
+      (lib.fileset.fileFilter (file: file.hasExt "md") ../docs)
+      (lib.fileset.intersection
         (lib.fileset.fileFilter (
           file:
           file.name == "LICENSE"
@@ -66,7 +68,8 @@ stdenvNoCC.mkDerivation {
             ./doctor.py
           ]
         )
-    );
+      )
+    ];
   };
   nativeBuildInputs = [ makeWrapper ];
   dontBuild = true;

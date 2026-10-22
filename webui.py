@@ -51,6 +51,7 @@ from tools.pymss_webui import (
     stop_pymss_separation as _stop_pymss_separation_core,
 )
 from tools.file_io import read_text
+from tools.faq import load_faq
 from tools.process_utils import kill_process_tree
 from tools.multispeaker import (
     ManifestError,
@@ -2830,10 +2831,7 @@ with gr.Blocks(title="RVC WebUI", css=TRAINING_INFO_CSS) as app:
         tab_faq = i18n("常见问题解答")
         with gr.TabItem(tab_faq):
             try:
-                if tab_faq == "常见问题解答":
-                    info = read_text("docs/cn/faq.md")
-                else:
-                    info = read_text("docs/en/faq_en.md")
+                info = load_faq(i18n.language)
                 gr.Markdown(value=info)
             except Exception:
                 gr.Markdown(traceback.format_exc())
