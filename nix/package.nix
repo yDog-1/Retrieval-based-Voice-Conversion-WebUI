@@ -35,36 +35,36 @@ stdenvNoCC.mkDerivation {
   version = "0.1.0";
   src = lib.fileset.toSource {
     root = ../.;
-    fileset =
-      lib.fileset.intersection
-        (lib.fileset.fileFilter (
-          file:
-          file.name == "LICENSE"
-          || builtins.any file.hasExt [
-            "py"
-            "json"
-            "yaml"
-            "html"
-            "css"
-            "js"
-          ]
-        ) ../.)
-        (
-          lib.fileset.unions [
-            ../webui.py
-            ../realtime_gui.py
-            ../configs
-            ../i18n
-            ../infer
-            ../tools
-            ../train
-            ../assets/pymss_weights
-            ../LICENSE
-            ./launcher.py
-            ./download_models.py
-            ./doctor.py
-          ]
-        );
+    fileset = lib.fileset.union (lib.fileset.intersection
+      (lib.fileset.fileFilter (
+        file:
+        file.name == "LICENSE"
+        || builtins.any file.hasExt [
+          "py"
+          "json"
+          "yaml"
+          "html"
+          "css"
+          "js"
+        ]
+      ) ../.)
+      (
+        lib.fileset.unions [
+          ../webui.py
+          ../realtime_gui.py
+          ../configs
+          ../i18n
+          ../infer
+          ../tools
+          ../train
+          ../assets/pymss_weights
+          ../LICENSE
+          ./launcher.py
+          ./download_models.py
+          ./doctor.py
+        ]
+      )
+    ) (lib.fileset.fileFilter (file: file.hasExt "md") ../docs);
   };
   nativeBuildInputs = [ makeWrapper ];
   dontBuild = true;
