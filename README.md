@@ -56,6 +56,11 @@
 
 ## 环境配置
 
+### Nix (Linux x86_64 / CUDA 11.8)
+
+Use `nix build`, `nix run .#webui -- --noautoopen`, or `nix run .#realtime`.
+See [Nix installation and usage (日本語)](./docs/jp/nix.md) for model downloads, data paths, and development with uv.
+
 本分支面向 **Python 3.12 x64**，请先进入仓库根目录。Ubuntu 推荐使用 Ubuntu 24.04 x86_64。
 
 ### Ubuntu 24.04
